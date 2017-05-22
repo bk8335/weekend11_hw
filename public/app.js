@@ -62,14 +62,43 @@ var populateWeather = function(location){
 
   var isLight = document.createElement('li');
   if(Date.now()/1000 > location.sys.sunrise && Date.now()/1000 < location.sys.sunset)
-    isLight.innerText = "after sunrise and before sunset";
+    isLight.innerText = "not dark!";
   else
     isLight.innerText = "dark";
-  ul.appendChild(isLight)
 
+  
 
   var li3 = document.createElement('li');
-  li3.innerText = "Temperature (kelvin): " + location.main.temp
+  var tempCelsius = Math.round((location.main.temp - 273.15))
+  li3.innerText = "Temperature (celsius): " + tempCelsius
+  console.log(tempCelsius)
+
+  var isCool = document.createElement('li');
+  if(tempCelsius > 0 && tempCelsius < 30){
+    isCool.innerText = "not freezing and not boiling!"
+  }
+  else if(tempCelsius > 30){
+    isCool.innerText = "too hot - gor for a BBQ not a run!"
+  }
+  else
+    isCool.innerText = "brrr, it's too chilly outside!"
+
+
+  var isDry = document.createElement('li');
+  if(location.weather[0].main === 'Rain'){
+    isDry.innerText = "it is wet outside"
+  }
+  else if(location.weather[0].main === "Snow"){
+    isDry.innerText = "it's snowing - don't go running!"
+  }
+  else
+    isDry.innerText = "it is not wet or snowing - ideal!"
+
+  var goodToRun = document.createElement('li');
+  if(isDry.innerText === "it is not wet or snowing - ideal!" && isCool.innerText === "not freezing and not boiling!" && isLight.innerText === "not dark!"){
+    goodToRun.innerText = "Good to run - enjoy!"
+  }
+
 
   var li4 = document.createElement('li');
   li4.innerText = "Weather type: " + location.weather[0].main
@@ -77,12 +106,19 @@ var populateWeather = function(location){
   var li5 = document.createElement('li');
   li5.innerText = ".....................................................";
 
+  ul.appendChild(goodToRun)
   ul.appendChild(li0)
   ul.appendChild(li1)
   ul.appendChild(li2)
   ul.appendChild(li3)
   ul.appendChild(li4)
+
+  ul.appendChild(isLight)
+  ul.appendChild(isCool)
+  ul.appendChild(isDry)
+
   ul.appendChild(li5)
+
 }
 
 
